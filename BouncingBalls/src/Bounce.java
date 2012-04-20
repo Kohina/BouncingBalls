@@ -15,7 +15,7 @@ public class Bounce extends Animation {
 		Vx1 = 2; // in m/s
 		Vy1 = -1.3;
 
-		X2 = 4; // in meters
+		X2 = 1; // in meters
 		Y2 = 1; // Y reference direction downwards!
 		Vx2 = -1; // in m/s
 		Vy2 = 5;
@@ -62,10 +62,35 @@ public class Bounce extends Animation {
 		}
 		
 		if(Math.abs(Math.sqrt(Math.pow(pixelX1-pixelX2, 2)+Math.pow(pixelY1-pixelY2, 2))) < 2*radius) {
-			Vy1 = -Vy1;
-			Vx1 = -Vx1;
-			Vy2 = -Vy2;
-			Vx2 = -Vx2;
+			int dX = pixelX1 - pixelX2;
+			int dY = pixelY1 - pixelY2;
+			double a = Math.atan((double)dY/dX);
+			
+			double V1 = Math.sqrt(Math.pow(Vx1, 2)+Math.pow(Vy1, 2));
+			double aV1 = Math.atan(Vy1/Vx1);
+			double V2 = Math.sqrt(Math.pow(Vx2, 2)+Math.pow(Vy2, 2));
+			double aV2 = Math.atan(Vy2/Vx2);
+			double a1 = aV1-a;
+			double a2 = aV2-a;
+			
+			double Vf1 = V1*Math.cos(a1);
+			double Vg1 = V1*Math.sin(a1);
+			double Vf2 = V2*Math.cos(a2);
+			double Vg2 = V2*Math.sin(a2);
+						
+			double Uf1 = Vf1;
+			Vf1 = Vf2;
+			Vf2 = Uf1;
+			
+			double b1 = Math.atan(Vg1/Vf1);
+			double b2 = Math.atan(Vg2/Vf2);
+			V1 = Math.sqrt(Math.pow(Vf1, 2)+Math.pow(Vg1, 2));
+			V2 = Math.sqrt(Math.pow(Vf2, 2)+Math.pow(Vg2, 2));
+			
+			Vx1 = V1*Math.cos(a+b1);
+			Vy1 = V1*Math.sin(a+b1);
+			Vx2 = V2*Math.cos(a+b2);
+			Vy2 = V2*Math.sin(a+b2);
 		}
 		
 		Vy1 -= grav * deltaT;
