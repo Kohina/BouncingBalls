@@ -56,4 +56,3 @@ public class Ball {
 		return this.color;
 	}
 }
-
