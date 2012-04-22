@@ -147,12 +147,32 @@ public class Bounce extends Animation {
 			if(overX < 0){
 				ball1.setPosition(ball1.getX()-overX/2, ball1.getY());
 				ball2.setPosition(ball2.getX()+overX/2, ball2.getY());
+				double inWall = ((double)(ball1.getX()*pixelsPerMeter+ball1.getRadius()-d.width))/pixelsPerMeter;
+				if (inWall > 0) {
+					ball1.setPosition(ball1.getX()-inWall, ball1.getY());
+					ball2.setPosition(ball2.getX()-inWall, ball2.getY());
+				}
+				inWall = ((double)(ball2.getX()*pixelsPerMeter-ball2.getRadius()))/pixelsPerMeter;
+				if (inWall < 0) {
+					ball1.setPosition(ball1.getX()-inWall, ball1.getY());
+					ball2.setPosition(ball2.getX()-inWall, ball2.getY());
+				}
 			}
 		} else {
 			double overX = (dX + radiusSum);
 			if(overX > 0){
 				ball1.setPosition(ball1.getX()-overX/2, ball1.getY());
 				ball2.setPosition(ball2.getX()+overX/2, ball2.getY());
+			}
+			double inWall = ((double)(ball1.getX()*pixelsPerMeter-ball1.getRadius()))/pixelsPerMeter;
+			if (inWall < 0) {
+				ball1.setPosition(ball1.getX()-inWall, ball1.getY());
+				ball2.setPosition(ball2.getX()-inWall, ball2.getY());
+			}
+			inWall = ((double)(ball2.getX()*pixelsPerMeter+ball2.getRadius()-d.width))/pixelsPerMeter;
+			if (inWall > 0) {
+				ball1.setPosition(ball1.getX()-inWall, ball1.getY());
+				ball2.setPosition(ball2.getX()-inWall, ball2.getY());
 			}
 		}
 		
@@ -162,11 +182,31 @@ public class Bounce extends Animation {
 				ball1.setPosition(ball1.getX(), ball1.getY()-overY/2);
 				ball2.setPosition(ball2.getX(), ball2.getY()+overY/2);
 			}
+			double inWall = ((double)(ball1.getX()*pixelsPerMeter+ball1.getRadius()-d.height))/pixelsPerMeter;
+			if (inWall > 0) {
+				ball1.setPosition(ball1.getX(), ball1.getY()-inWall);
+				ball2.setPosition(ball2.getX(), ball2.getY()-inWall);
+			}
+			inWall = ((double)(ball2.getX()*pixelsPerMeter-ball2.getRadius()))/pixelsPerMeter;
+			if (inWall < 0) {
+				ball1.setPosition(ball1.getX(), ball1.getY()-inWall);
+				ball2.setPosition(ball2.getX(), ball2.getY()-inWall);
+			}
 		} else {
 			double overY = (dY + radiusSum);
 			if(overY > 0){
 				ball1.setPosition(ball1.getX(), ball1.getY()-overY/2);
 				ball2.setPosition(ball2.getX(), ball2.getY()+overY/2);
+			}
+			double inWall = ((double)(ball1.getX()*pixelsPerMeter-ball1.getRadius()))/pixelsPerMeter;
+			if (inWall < 0) {
+				ball1.setPosition(ball1.getX(), ball1.getY()-inWall);
+				ball2.setPosition(ball2.getX(), ball2.getY()-inWall);
+			}
+			inWall = ((double)(ball2.getX()*pixelsPerMeter+ball2.getRadius()-d.height))/pixelsPerMeter;
+			if (inWall > 0) {
+				ball1.setPosition(ball1.getX(), ball1.getY()-inWall);
+				ball2.setPosition(ball2.getX(), ball2.getY()-inWall);
 			}
 		}
 	}
