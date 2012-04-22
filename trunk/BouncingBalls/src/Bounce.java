@@ -88,6 +88,8 @@ public class Bounce extends Animation {
 		if (ball.getY()*pixelsPerMeter + ball.getRadius() >= d.height) { // top wall
 			ball.setVelocity(ball.getVx(), -ball.getVy());
 		}
+		
+		fixOverlap(ball);
 	}
 	
 	private void handleCollision(Ball ball1, Ball ball2) {
@@ -159,6 +161,23 @@ public class Bounce extends Animation {
 				ball1.setPosition(ball1.getX(), ball1.getY()-overY/2);
 				ball2.setPosition(ball2.getX(), ball2.getY()+overY/2);
 			}
+		}
+	}
+	
+	private void fixOverlap(Ball ball) {
+		double r = ((double)(ball.getRadius()))/pixelsPerMeter;
+		
+		if (ball.getX()*pixelsPerMeter - ball.getRadius() <= 0) { // left wall
+			ball.setPosition(0+r, ball.getY());
+		}
+		if (ball.getX()*pixelsPerMeter + ball.getRadius() >= d.width) { // right wall
+			ball.setPosition(((double)(d.width))/pixelsPerMeter - r, ball.getY());
+		}
+		if (ball.getY()*pixelsPerMeter - ball.getRadius() <= 0) { // bottom wall
+			ball.setPosition(ball.getX(), 0+r);
+		}
+		if (ball.getY()*pixelsPerMeter + ball.getRadius() >= d.height) { // top wall
+			ball.setPosition(ball.getX(), ((double)(d.height))/pixelsPerMeter - r);
 		}
 	}
 	
