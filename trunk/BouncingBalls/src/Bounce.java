@@ -12,7 +12,7 @@ public class Bounce extends Animation {
 		setDelay((int) (1000 * deltaT)); // needed for Animation superclass
 		radius = 25; // in pixels!
 		pixelsPerMeter = 40;
-		grav = -9.8;
+		grav = 9.8;
 
 		balls[0] = new Ball(3, 3, radius, 1, 2, -1.3, Color.red);
 		balls[1] = new Ball(1, 1, radius, 1, -1, 5, Color.blue);
@@ -30,13 +30,40 @@ public class Bounce extends Animation {
 			firstTime = 0;
 		}
 		// g.fillRect(0,0,d.width,d.height); // slower?
-		g.fillOval(pixelX1 - radius, pixelY1 - radius, radius * 2, radius * 2);
-		g.fillOval(pixelX2 - radius, pixelY2 - radius, radius * 2, radius * 2);
+		g.fillOval(pixelX1 - radius, d.height - pixelY1 - radius, radius * 2, radius * 2);
+		g.fillOval(pixelX2 - radius, d.height - pixelY2 - radius, radius * 2, radius * 2);
 		
-		if(Math.abs(Math.sqrt(Math.pow(pixelX1-pixelX2, 2)+Math.pow(pixelY1-pixelY2, 2))) < 2*radius) {
-			int dX = pixelX1 - pixelX2; //Avstånd mellan bollarna i x-led
-			int dY = pixelY1 - pixelY2; //Avstånd mellan bollarna i y-led
-			double a = Math.atan((double)dY/dX);  //vinkeln som bollarna träffas i
+		if(pixelX1-radius <= 0) { //left wall
+			balls[0].setVelocity(-balls[0].getVx(), balls[0].getVy());
+		}
+		if(pixelX1+radius >= d.width) { //right wall
+			balls[0].setVelocity(-balls[0].getVx(), balls[0].getVy());
+		}
+		if(pixelY1-radius <= 0) { //bottom wall
+			balls[0].setVelocity(balls[0].getVx(), -balls[0].getVy());
+		}
+		if(pixelY1+radius >= d.height) { //top wall
+			balls[0].setVelocity(balls[0].getVx(), -balls[0].getVy());
+		}
+		
+		if(pixelX2-radius <= 1) { //left wall
+			balls[1].setVelocity(-balls[1].getVx(), balls[1].getVy());
+		}
+		if(pixelX2+radius >= d.width) { //right wall
+			balls[1].setVelocity(-balls[1].getVx(), balls[1].getVy());
+		}
+		if(pixelY2-radius <= 1) { //bottom wall
+			balls[1].setVelocity(balls[1].getVx(), -balls[1].getVy());
+		}
+		if(pixelY2+radius >= d.height) { //top wall
+			balls[1].setVelocity(balls[1].getVx(), -balls[1].getVy());
+		}
+		
+		
+		/*if(Math.abs(Math.sqrt(Math.pow(pixelX1-pixelX2, 2)+Math.pow(pixelY1-pixelY2, 2))) < 2*radius) {
+			int dX = pixelX1 - pixelX2; //Avstï¿½nd mellan bollarna i x-led
+			int dY = pixelY1 - pixelY2; //Avstï¿½nd mellan bollarna i y-led
+			double a = Math.atan((double)dY/dX);  //vinkeln som bollarna trï¿½ffas i
 			
 			double V1 = Math.sqrt(Math.pow(balls[0].getVx(), 2)+Math.pow(balls[0].getVy(), 2));
 			double aV1 = Math.atan(balls[0].getVy()/balls[0].getVx());
@@ -61,7 +88,7 @@ public class Bounce extends Animation {
 			
 			balls[0].setVelocity(V1*Math.cos(a+b1), V1*Math.sin(a+b1));
 			balls[1].setVelocity(V2*Math.cos(a+b2), V2*Math.sin(a+b2));
-		}
+		}*/
 		
 		balls[0].setVelocity(balls[0].getVx(), balls[0].getVy()-grav*deltaT);
 		balls[1].setVelocity(balls[1].getVx(), balls[1].getVy()-grav*deltaT);
@@ -75,7 +102,7 @@ public class Bounce extends Animation {
 		pixelY2 = (int) (pixelsPerMeter * balls[1].getY());
 		
 		//Check so that the balls are not stuck in the walls
-		if (pixelX1 > d.width-radius) {
+		/*if (pixelX1 > d.width-radius) {
 			pixelX1 = d.width-radius;
 			balls[0].setVelocity(-balls[0].getVx(), balls[0].getVy());
 		}
@@ -107,11 +134,13 @@ public class Bounce extends Animation {
 		if (pixelY2 < radius) {
 			pixelY2 = 0+radius;
 			balls[1].setVelocity(balls[1].getVx(), -balls[1].getVy());
-		}
+		}*/
+		
+		
 		
 		g.setColor(balls[0].getColor());
-		g.fillOval(pixelX1 - radius, pixelY1 - radius, radius * 2, radius * 2);
+		g.fillOval(pixelX1 - radius, d.height - pixelY1 - radius, radius * 2, radius * 2);
 		g.setColor(balls[1].getColor());
-		g.fillOval(pixelX2 - radius, pixelY2 - radius, radius * 2, radius * 2);
+		g.fillOval(pixelX2 - radius, d.height - pixelY2 - radius, radius * 2, radius * 2);
 	}
 }
