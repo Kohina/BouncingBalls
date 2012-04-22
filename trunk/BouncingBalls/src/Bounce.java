@@ -4,17 +4,16 @@ public class Bounce extends Animation {
 
 	protected double deltaT, pixelsPerMeter, grav;
 	protected int radius, firstTime = 1, pixelX1, pixelY1, pixelX2, pixelY2;
-	protected Color color = Color.red;
 	protected Ball[] balls = new Ball[2];
 
 	protected void initAnimator() {
-		deltaT = 0.005; // simulation time interval in seconds
+		deltaT = 0.007; // simulation time interval in seconds
 		setDelay((int) (1000 * deltaT)); // needed for Animation superclass
 		pixelsPerMeter = 40;
 		grav = 9.8;
 
-		balls[0] = new Ball(3, 3, 20, 3, 1, 10, Color.red);
-		balls[1] = new Ball(1, 1, 10, 7, -1, 5, Color.blue);
+		balls[0] = new Ball(3, 3, 20, 7, 1, 5, Color.red);
+		balls[1] = new Ball(1, 1, 20, 7, -1, 5, Color.blue);
 	
 		pixelX1 = (int) (pixelsPerMeter * balls[0].getX()); // screen position
 		pixelY1 = (int) (pixelsPerMeter * balls[0].getY());
@@ -23,13 +22,6 @@ public class Bounce extends Animation {
 	}
 
 	protected void paintAnimator(Graphics g) {
-		/*try {
-			Thread.currentThread().sleep(10000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-		
 		g.setColor(Color.white);
 		if (firstTime == 1) {
 			g.fillRect(0, 0, d.width, d.height);
@@ -69,10 +61,10 @@ public class Bounce extends Animation {
 		}
 		
 		
-		if(Math.sqrt(Math.pow(pixelX1-pixelX2, 2)+Math.pow(pixelY1-pixelY2, 2)) <= balls[0].getRadius() + balls[1].getRadius()) {
-			int dX = pixelX1 - pixelX2; //Avst�nd mellan bollarna i x-led
-			int dY = pixelY1 - pixelY2; //Avst�nd mellan bollarna i y-led
-			double a = Math.atan((double)dY/dX);  //vinkeln som bollarna tr�ffas i
+		if(Math.abs(Math.sqrt(Math.pow(pixelX1-pixelX2, 2)+Math.pow(pixelY1-pixelY2, 2))) < 2*radius) {
+			int dX = pixelX1 - pixelX2;
+			int dY = pixelY1 - pixelY2;
+			double a = Math.atan((double)dY/dX);
 			
 			double V1 = Math.sqrt(Math.pow(balls[0].getVx(), 2)+Math.pow(balls[0].getVy(), 2));
 			double aV1 = Math.atan(balls[0].getVy()/balls[0].getVx());
@@ -100,8 +92,20 @@ public class Bounce extends Animation {
 			
 			balls[0].setVelocity(V1*Math.cos(a+b1), V1*Math.sin(a+b1));
 			balls[1].setVelocity(V2*Math.cos(a+b2), V2*Math.sin(a+b2));
+			
+			double over = Math.abs((balls[0].getX()-balls[1].getX())-(balls[0].getRadius()+balls[1].getRadius()));
+			System.out.println("over: " + over);
+			if(over > 0){
+				if(balls[0].getX() < balls[1].getX()){
+					balls[0].setPosition(balls[0].getX()-(over/2), balls[0].getY());
+					balls[1].setPosition(balls[1].getX()+(over/2), balls[1].getY());
+				}
+				else{
+					balls[1].setPosition(balls[1].getX()-(over/2), balls[1].getY());
+					balls[0].setPosition(balls[0].getX()+(over/2), balls[0].getY());
+				}
+			}
 		}
-		
 		
 		balls[0].setVelocity(balls[0].getVx(), balls[0].getVy()-grav*deltaT);
 		balls[1].setVelocity(balls[1].getVx(), balls[1].getVy()-grav*deltaT);
@@ -113,50 +117,10 @@ public class Bounce extends Animation {
 		pixelY1 = (int) (pixelsPerMeter * balls[0].getY());
 		pixelX2 = (int) (pixelsPerMeter * balls[1].getX());
 		pixelY2 = (int) (pixelsPerMeter * balls[1].getY());
-		
-		//Check so that the balls are not stuck in the walls
-		/*if (pixelX1 > d.width-radius) {
-			pixelX1 = d.width-radius;
-			balls[0].setVelocity(-balls[0].getVx(), balls[0].getVy());
-		}
-		if (pixelX1 < radius) {
-			pixelX1 = 0+radius;
-			balls[0].setVelocity(-balls[0].getVx(), balls[0].getVy());
-		}
-		if(pixelY1 > d.height-radius){
-			pixelY1 = d.height-radius;
-			balls[0].setVelocity(balls[0].getVx(), -balls[0].getVy());
-		}
-		if (pixelY1 < radius) {
-			pixelY1 = 0+radius;
-			balls[0].setVelocity(balls[0].getVx(), -balls[0].getVy());
-		}
-		
-		if(pixelX2 > d.width-radius){
-			pixelX2 = d.width-radius;
-			balls[1].setVelocity(-balls[1].getVx(), balls[1].getVy());
-		}
-		if (pixelX2 < radius) {
-			pixelX2 = 0+radius;
-			balls[1].setVelocity(-balls[1].getVx(), balls[1].getVy());
-		}
-		if(pixelY2 > d.height-radius){
-			pixelX2 = d.height-radius;
-			balls[1].setVelocity(balls[1].getVx(), -balls[1].getVy());
-		}
-		if (pixelY2 < radius) {
-			pixelY2 = 0+radius;
-			balls[1].setVelocity(balls[1].getVx(), -balls[1].getVy());
-		}*/
-		
-		//System.out.println("After: b1: (" + balls[0].getX() + ", " + balls[0].getY() + ") v(" + balls[0].getVx() + ", " + balls[0].getVy() + ") \t\t" + 
-		//		"b2: (" + balls[1].getX() + ", " + balls[1].getY() + ") v(" + balls[1].getVx() + ", " + balls[1].getVy() + ") \t\t");
-		
+
 		g.setColor(balls[0].getColor());
 		g.fillOval(pixelX1 - balls[0].getRadius(), d.height - pixelY1 - balls[0].getRadius(), balls[0].getRadius() * 2, balls[0].getRadius() * 2);
 		g.setColor(balls[1].getColor());
 		g.fillOval(pixelX2 - balls[1].getRadius(), d.height - pixelY2 - balls[1].getRadius(), balls[1].getRadius() * 2, balls[1].getRadius() * 2);
-		
-		
 	}
 }
