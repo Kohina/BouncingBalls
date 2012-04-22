@@ -13,8 +13,8 @@ public class Bounce extends Animation {
 		pixelsPerMeter = 40;
 		grav = 9.8;
 
-		balls[0] = new Ball(3, 3, 0.2, 7, 1, 5, Color.red);
-		balls[1] = new Ball(1, 1, 0.3, 7, -2, 5, Color.blue);
+		balls[0] = new Ball(3, 3, 0.5, 7, 1, 5, Color.red);
+		balls[1] = new Ball(1, 1, 0.4, 7, -2, 5, Color.blue);
 	
 		pixelX1 = (int) (pixelsPerMeter * balls[0].getX()); // screen position
 		pixelY1 = (int) (pixelsPerMeter * balls[0].getY());
@@ -41,16 +41,16 @@ public class Bounce extends Animation {
 			balls[0].setPosition(balls[0].getRadius(), balls[0].getY());
 			balls[0].setVelocity(-balls[0].getVx(), balls[0].getVy());
 		}
-		if(balls[0].getX()+balls[0].getRadius() >= d.width) { //right wall
-			balls[0].setPosition(d.width-balls[0].getRadius(), balls[0].getY());
+		if(balls[0].getX()+balls[0].getRadius() >= (d.width/pixelsPerMeter)) { //right wall
+			balls[0].setPosition((d.width/pixelsPerMeter)-balls[0].getRadius(), balls[0].getY());
 			balls[0].setVelocity(-balls[0].getVx(), balls[0].getVy());
 		}
 		if(balls[0].getY()-balls[0].getRadius() <= 0) { //bottom wall
 			balls[0].setPosition(balls[0].getX(), balls[0].getRadius());
 			balls[0].setVelocity(balls[0].getVx(), -balls[0].getVy());
 		}
-		if(balls[0].getY()+balls[0].getRadius() >= d.height) { //top wall
-			balls[0].setPosition(balls[0].getX(), d.height-balls[0].getRadius());
+		if(balls[0].getY()+balls[0].getRadius() >= (d.height/pixelsPerMeter)) { //top wall
+			balls[0].setPosition(balls[0].getX(), (d.height/pixelsPerMeter)-balls[0].getRadius());
 			balls[0].setVelocity(balls[0].getVx(), -balls[0].getVy());
 		}
 		
@@ -58,16 +58,16 @@ public class Bounce extends Animation {
 			balls[1].setPosition(balls[1].getRadius(), balls[1].getY());
 			balls[1].setVelocity(-balls[1].getVx(), balls[1].getVy());
 		}
-		if(balls[1].getX()+balls[1].getRadius() >= d.width) { //right wall
-			balls[1].setPosition(d.width-balls[1].getRadius(), balls[1].getY());
+		if(balls[1].getX()+balls[1].getRadius() >= (d.width/pixelsPerMeter)) { //right wall
+			balls[1].setPosition((d.width/pixelsPerMeter)-balls[1].getRadius(), balls[1].getY());
 			balls[1].setVelocity(-balls[1].getVx(), balls[1].getVy());
 		}
 		if(balls[1].getY()-balls[1].getRadius() <= 0) { //bottom wall
 			balls[1].setPosition(balls[1].getX(), balls[1].getRadius());
 			balls[1].setVelocity(balls[1].getVx(), -balls[1].getVy());
 		}
-		if(balls[1].getY()+balls[1].getRadius() >= d.height) { //top wall
-			balls[1].setPosition(balls[1].getX(), d.height-balls[1].getRadius());
+		if(balls[1].getY()+balls[1].getRadius() >= (d.height/pixelsPerMeter)) { //top wall
+			balls[1].setPosition(balls[1].getX(), (d.height/pixelsPerMeter)-balls[1].getRadius());
 			balls[1].setVelocity(balls[1].getVx(), -balls[1].getVy());
 		}
 		
