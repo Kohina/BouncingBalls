@@ -65,20 +65,14 @@ public class Bounce extends Animation {
 	}
 	
 	private void paintBall(Ball ball, Graphics g) {
-		int pixelX1 = (int) (pixelsPerMeter * balls[0].getX());
-		int pixelY1 = (int) (pixelsPerMeter * balls[0].getY());
-		int pixelX2 = (int) (pixelsPerMeter * balls[1].getX());
-		int pixelY2 = (int) (pixelsPerMeter * balls[1].getY());
-
-
-		g.setColor(balls[0].getColor());
-		g.fillOval(pixelX1 - balls[0].getRadius(), d.height - pixelY1
-				- balls[0].getRadius(), balls[0].getRadius() * 2,
-				balls[0].getRadius() * 2);
-		g.setColor(balls[1].getColor());
-		g.fillOval(pixelX2 - balls[1].getRadius(), d.height - pixelY2
-				- balls[1].getRadius(), balls[1].getRadius() * 2,
-				balls[1].getRadius() * 2);
+		int pixelX = (int) (pixelsPerMeter * ball.getX());
+		int pixelY = (int) (pixelsPerMeter * ball.getY());
+		
+		g.setColor(ball.getColor());
+		g.fillOval(pixelX - ball.getRadius(), 
+				d.height - pixelY - ball.getRadius(), 
+				ball.getRadius() * 2,
+				ball.getRadius() * 2);
 	}
 	
 	private void handleWallCollision(Ball ball) {
@@ -130,37 +124,37 @@ public class Bounce extends Animation {
 			ball1.setVelocity(V1 * Math.cos(a + b1), V1 * Math.sin(a + b1));
 			ball2.setVelocity(V2 * Math.cos(a + b2), V2 * Math.sin(a + b2));
 			
-			fixOverlap(ball1, ball2);
+			fixOverlap(balls[0], balls[1]);
 		}
 	}
 	
 	private void fixOverlap(Ball ball1, Ball ball2) {
-		double radiusSum = (double)((ball1.getRadius() + ball2.getRadius()));
-		double dX = (ball1.getX()-ball2.getX())*pixelsPerMeter;
-		double dY = (ball1.getY()-ball2.getY())*pixelsPerMeter;
+		double radiusSum = ((double)(ball1.getRadius() + ball2.getRadius()))/pixelsPerMeter;
+		double dX = (ball1.getX()-ball2.getX());
+		double dY = (ball1.getY()-ball2.getY());
 		
 		if (dX > 0) {
-			double overX = (dX - radiusSum)/pixelsPerMeter;
+			double overX = (dX - radiusSum);
 			if(overX < 0){
 				ball1.setPosition(ball1.getX()-overX/2, ball1.getY());
-				ball2.setPosition(ball1.getX()+overX/2, ball1.getY());
+				ball2.setPosition(ball2.getX()+overX/2, ball2.getY());
 			}
 		} else {
-			double overX = (dX + radiusSum)/pixelsPerMeter;
+			double overX = (dX + radiusSum);
 			if(overX > 0){
 				ball1.setPosition(ball1.getX()-overX/2, ball1.getY());
-				ball2.setPosition(ball1.getX()+overX/2, ball1.getY());
+				ball2.setPosition(ball2.getX()+overX/2, ball2.getY());
 			}
 		}
 		
 		if (dY > 0) {
-			double overY = (dY - radiusSum)/pixelsPerMeter;
+			double overY = (dY - radiusSum);
 			if(overY < 0){
 				ball1.setPosition(ball1.getX(), ball1.getY()-overY/2);
 				ball2.setPosition(ball2.getX(), ball2.getY()+overY/2);
 			}
 		} else {
-			double overY = (dY + radiusSum)/pixelsPerMeter;
+			double overY = (dY + radiusSum);
 			if(overY > 0){
 				ball1.setPosition(ball1.getX(), ball1.getY()-overY/2);
 				ball2.setPosition(ball2.getX(), ball2.getY()+overY/2);
