@@ -3,7 +3,8 @@ import java.awt.*;
 public class Bounce extends Animation {
 
 	protected double deltaT, pixelsPerMeter, grav;
-	protected int radius, firstTime = 1, pixelX1, pixelY1, pixelX2, pixelY2;
+	protected boolean firstTime = true;
+	protected int radius, pixelX1, pixelY1, pixelX2, pixelY2;
 	protected Ball[] balls = new Ball[2];
 
 	protected void initAnimator() {
@@ -13,7 +14,7 @@ public class Bounce extends Animation {
 		grav = 9.8;
 
 		balls[0] = new Ball(3, 3, 20, 7, 1, 5, Color.red);
-		balls[1] = new Ball(1, 1, 20, 7, -1, 5, Color.blue);
+		balls[1] = new Ball(1, 1, 20, 7, 1, 5, Color.blue);
 	
 		pixelX1 = (int) (pixelsPerMeter * balls[0].getX()); // screen position
 		pixelY1 = (int) (pixelsPerMeter * balls[0].getY());
@@ -23,9 +24,9 @@ public class Bounce extends Animation {
 
 	protected void paintAnimator(Graphics g) {
 		g.setColor(Color.white);
-		if (firstTime == 1) {
+		if (firstTime) {
 			g.fillRect(0, 0, d.width, d.height);
-			firstTime = 0;
+			firstTime = false;
 		}
 		// g.fillRect(0,0,d.width,d.height); // slower?
 		g.fillOval(pixelX1 - balls[0].getRadius(), d.height - pixelY1 - balls[0].getRadius(), balls[0].getRadius() * 2, balls[0].getRadius() * 2);
@@ -61,7 +62,7 @@ public class Bounce extends Animation {
 		}
 		
 		
-		if(Math.abs(Math.sqrt(Math.pow(pixelX1-pixelX2, 2)+Math.pow(pixelY1-pixelY2, 2))) < 2*radius) {
+		if(Math.sqrt(Math.pow(pixelX1-pixelX2, 2)+Math.pow(pixelY1-pixelY2, 2)) <= balls[0].getRadius() + balls[1].getRadius()) {
 			int dX = pixelX1 - pixelX2;
 			int dY = pixelY1 - pixelY2;
 			double a = Math.atan((double)dY/dX);
@@ -95,6 +96,10 @@ public class Bounce extends Animation {
 			
 			double over = Math.abs((balls[0].getX()-balls[1].getX())-(balls[0].getRadius()+balls[1].getRadius()));
 			System.out.println("over: " + over);
+			System.out.println("Y1: " + (balls[0].getX()-(over/2)));
+			System.out.println("X1: " + balls[0].getX());
+			System.out.println("Y2: " + balls[1].getY());
+			System.out.println("X2: " + balls[1].getX());
 			if(over > 0){
 				if(balls[0].getX() < balls[1].getX()){
 					balls[0].setPosition(balls[0].getX()-(over/2), balls[0].getY());
