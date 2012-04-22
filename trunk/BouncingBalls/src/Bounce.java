@@ -13,7 +13,7 @@ public class Bounce extends Animation {
 		pixelsPerMeter = 40;
 		grav = 9.8;
 
-		balls[0] = new Ball(3, 3, 0.5, 7, 1, 5, Color.red);
+		balls[0] = new Ball(3, 3, 0.3, 15, 1, 5, Color.red);
 		balls[1] = new Ball(1, 1, 0.4, 7, -2, 5, Color.blue);
 	
 		pixelX1 = (int) (pixelsPerMeter * balls[0].getX()); // screen position
@@ -33,10 +33,8 @@ public class Bounce extends Animation {
 		// g.fillRect(0,0,d.width,d.height); // slower?
 		g.fillOval(pixelX1 - radius1, d.height - pixelY1 - radius1, radius1 * 2, radius1 * 2);
 		g.fillOval(pixelX2 - radius2, d.height - pixelY2 - radius2, radius2 * 2, radius2 * 2);
-		
-		//System.out.println("Before: b1: (" + balls[0].getX() + ", " + balls[0].getY() + ") v(" + balls[0].getVx() + ", " + balls[0].getVy() + ") \t\t" + 
-		//		"b2: (" + balls[1].getX() + ", " + balls[1].getY() + ") v(" + balls[1].getVx() + ", " + balls[1].getVy() + ") \t\t");
-		
+	
+		//Check for wall collisions
 		if(balls[0].getX()-balls[0].getRadius() <= 0) { //left wall
 			balls[0].setPosition(balls[0].getRadius(), balls[0].getY());
 			balls[0].setVelocity(-balls[0].getVx(), balls[0].getVy());
@@ -103,6 +101,7 @@ public class Bounce extends Animation {
 			balls[0].setVelocity(V1*Math.cos(a+b1), V1*Math.sin(a+b1));
 			balls[1].setVelocity(V2*Math.cos(a+b2), V2*Math.sin(a+b2));
 			
+			//Check if the balls are overlapping
 			double over = Math.abs((balls[0].getX()-balls[1].getX())-(balls[0].getRadius()+balls[1].getRadius()));
 			if(over > 0){
 				if(balls[0].getX() < balls[1].getX()){
