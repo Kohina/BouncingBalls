@@ -2,15 +2,15 @@ import java.awt.Color;
 
 
 public class Ball {
-	private double radius;
-	private int mass;
-	private double x;
-	private double y;
-	private double vx;
-	private double vy;
+	private int radius;	//in px
+	private int mass;	
+	private double x;	//in m
+	private double y;	//in m
+	private double vx;	//in m/s
+	private double vy;	//in m/s
 	private Color color;
 	
-	public Ball(double x, double y, double radius, int mass, double vx, double vy, Color color) {
+	public Ball(double x, double y, int radius, int mass, double vx, double vy, Color color) {
 		this.setPosition(x, y);
 		this.radius=radius;
 		this.mass=mass;
@@ -28,7 +28,7 @@ public class Ball {
 		this.vy = vy;
 	}
 	
-	public double getRadius() {
+	public int getRadius() {
 		return this.radius;
 	}
 	
