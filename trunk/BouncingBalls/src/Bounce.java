@@ -4,7 +4,7 @@ public class Bounce extends Animation {
 
 	protected double deltaT, pixelsPerMeter, grav;
 	protected boolean firstTime = true;
-	protected int radius, pixelX1, pixelY1, pixelX2, pixelY2;
+	protected int pixelX1, pixelY1, pixelX2, pixelY2, radius1, radius2;
 	protected Ball[] balls = new Ball[2];
 
 	protected void initAnimator() {
@@ -13,13 +13,15 @@ public class Bounce extends Animation {
 		pixelsPerMeter = 40;
 		grav = 9.8;
 
-		balls[0] = new Ball(3, 3, 20, 7, 1, 5, Color.red);
-		balls[1] = new Ball(1, 1, 15, 7, -2, 5, Color.blue);
+		balls[0] = new Ball(3, 3, 0.2, 7, 1, 5, Color.red);
+		balls[1] = new Ball(1, 1, 0.3, 7, -2, 5, Color.blue);
 	
 		pixelX1 = (int) (pixelsPerMeter * balls[0].getX()); // screen position
 		pixelY1 = (int) (pixelsPerMeter * balls[0].getY());
+		radius1 = (int) (pixelsPerMeter * balls[0].getRadius());
 		pixelX2 = (int) (pixelsPerMeter * balls[1].getX()); // screen position
 		pixelY2 = (int) (pixelsPerMeter * balls[1].getY());
+		radius2 = (int) (pixelsPerMeter * balls[1].getRadius());
 	}
 
 	protected void paintAnimator(Graphics g) {
@@ -29,43 +31,50 @@ public class Bounce extends Animation {
 			firstTime = false;
 		}
 		// g.fillRect(0,0,d.width,d.height); // slower?
-		g.fillOval(pixelX1 - balls[0].getRadius(), d.height - pixelY1 - balls[0].getRadius(), balls[0].getRadius() * 2, balls[0].getRadius() * 2);
-		g.fillOval(pixelX2 - balls[1].getRadius(), d.height - pixelY2 - balls[1].getRadius(), balls[1].getRadius() * 2, balls[1].getRadius() * 2);
+		g.fillOval(pixelX1 - radius1, d.height - pixelY1 - radius1, radius1 * 2, radius1 * 2);
+		g.fillOval(pixelX2 - radius2, d.height - pixelY2 - radius2, radius2 * 2, radius2 * 2);
 		
 		//System.out.println("Before: b1: (" + balls[0].getX() + ", " + balls[0].getY() + ") v(" + balls[0].getVx() + ", " + balls[0].getVy() + ") \t\t" + 
 		//		"b2: (" + balls[1].getX() + ", " + balls[1].getY() + ") v(" + balls[1].getVx() + ", " + balls[1].getVy() + ") \t\t");
 		
-		if(pixelX1-balls[0].getRadius() <= 0) { //left wall
+		if(balls[0].getX()-balls[0].getRadius() <= 0) { //left wall
+			balls[0].setPosition(balls[0].getRadius(), balls[0].getY());
 			balls[0].setVelocity(-balls[0].getVx(), balls[0].getVy());
 		}
-		if(pixelX1+balls[0].getRadius() >= d.width) { //right wall
+		if(balls[0].getX()+balls[0].getRadius() >= d.width) { //right wall
+			balls[0].setPosition(d.width-balls[0].getRadius(), balls[0].getY());
 			balls[0].setVelocity(-balls[0].getVx(), balls[0].getVy());
 		}
-		if(pixelY1-balls[0].getRadius() <= 0) { //bottom wall
+		if(balls[0].getY()-balls[0].getRadius() <= 0) { //bottom wall
+			balls[0].setPosition(balls[0].getX(), balls[0].getRadius());
 			balls[0].setVelocity(balls[0].getVx(), -balls[0].getVy());
 		}
-		if(pixelY1+balls[0].getRadius() >= d.height) { //top wall
+		if(balls[0].getY()+balls[0].getRadius() >= d.height) { //top wall
+			balls[0].setPosition(balls[0].getX(), d.height-balls[0].getRadius());
 			balls[0].setVelocity(balls[0].getVx(), -balls[0].getVy());
 		}
 		
-		if(pixelX2-balls[1].getRadius() <= 0) { //left wall
+		if(balls[1].getX()-balls[1].getRadius() <= 0) { //left wall
+			balls[1].setPosition(balls[1].getRadius(), balls[1].getY());
 			balls[1].setVelocity(-balls[1].getVx(), balls[1].getVy());
 		}
-		if(pixelX2+balls[1].getRadius() >= d.width) { //right wall
+		if(balls[1].getX()+balls[1].getRadius() >= d.width) { //right wall
+			balls[1].setPosition(d.width-balls[1].getRadius(), balls[1].getY());
 			balls[1].setVelocity(-balls[1].getVx(), balls[1].getVy());
 		}
-		if(pixelY2-balls[1].getRadius() <= 0) { //bottom wall
+		if(balls[1].getY()-balls[1].getRadius() <= 0) { //bottom wall
+			balls[1].setPosition(balls[1].getX(), balls[1].getRadius());
 			balls[1].setVelocity(balls[1].getVx(), -balls[1].getVy());
 		}
-		if(pixelY2+balls[1].getRadius() >= d.height) { //top wall
+		if(balls[1].getY()+balls[1].getRadius() >= d.height) { //top wall
+			balls[1].setPosition(balls[1].getX(), d.height-balls[1].getRadius());
 			balls[1].setVelocity(balls[1].getVx(), -balls[1].getVy());
 		}
 		
-		
-		if(Math.sqrt(Math.pow(pixelX1-pixelX2, 2)+Math.pow(pixelY1-pixelY2, 2)) <= balls[0].getRadius() + balls[1].getRadius()) {
-			int dX = pixelX1 - pixelX2;
-			int dY = pixelY1 - pixelY2;
-			double a = Math.atan((double)dY/dX);
+		if(Math.sqrt(Math.pow(balls[0].getX()-balls[1].getX(), 2)+Math.pow(balls[0].getY()-balls[1].getY(), 2)) <= balls[0].getRadius() + balls[1].getRadius()) {
+			double dX = balls[0].getX()-balls[1].getX();
+			double dY = balls[0].getY()-balls[1].getY();
+			double a = Math.atan(dY/dX);
 			
 			double V1 = Math.sqrt(Math.pow(balls[0].getVx(), 2)+Math.pow(balls[0].getVy(), 2));
 			double aV1 = Math.atan(balls[0].getVy()/balls[0].getVx());
@@ -94,15 +103,15 @@ public class Bounce extends Animation {
 			balls[0].setVelocity(V1*Math.cos(a+b1), V1*Math.sin(a+b1));
 			balls[1].setVelocity(V2*Math.cos(a+b2), V2*Math.sin(a+b2));
 			
-			double over = Math.abs(((balls[0].getX()*pixelsPerMeter)-(balls[1].getX()*pixelsPerMeter))-(balls[0].getRadius()+balls[1].getRadius()));
+			double over = Math.abs((balls[0].getX()-balls[1].getX())-(balls[0].getRadius()+balls[1].getRadius()));
 			if(over > 0){
 				if(balls[0].getX() < balls[1].getX()){
-					balls[0].setPosition(balls[0].getX()-((over/2)/pixelsPerMeter), balls[0].getY());
-					balls[1].setPosition(balls[1].getX()+((over/2)/pixelsPerMeter), balls[1].getY());
+					balls[0].setPosition(balls[0].getX()-(over/2), balls[0].getY());
+					balls[1].setPosition(balls[1].getX()+(over/2), balls[1].getY());
 				}
 				else{
-					balls[1].setPosition(balls[1].getX()-((over/2)/pixelsPerMeter), balls[1].getY());
-					balls[0].setPosition(balls[0].getX()+((over/2)/pixelsPerMeter), balls[0].getY());
+					balls[1].setPosition(balls[1].getX()-(over/2), balls[1].getY());
+					balls[0].setPosition(balls[0].getX()+(over/2), balls[0].getY());
 				}
 			}
 		}
@@ -119,8 +128,8 @@ public class Bounce extends Animation {
 		pixelY2 = (int) (pixelsPerMeter * balls[1].getY());
 
 		g.setColor(balls[0].getColor());
-		g.fillOval(pixelX1 - balls[0].getRadius(), d.height - pixelY1 - balls[0].getRadius(), balls[0].getRadius() * 2, balls[0].getRadius() * 2);
+		g.fillOval(pixelX1 - radius1, d.height - pixelY1 - radius1, radius1 * 2, radius1 * 2);
 		g.setColor(balls[1].getColor());
-		g.fillOval(pixelX2 - balls[1].getRadius(), d.height - pixelY2 - balls[1].getRadius(), balls[1].getRadius() * 2, balls[1].getRadius() * 2);
+		g.fillOval(pixelX2 - radius2, d.height - pixelY2 - radius2, radius2 * 2, radius2 * 2);
 	}
 }
