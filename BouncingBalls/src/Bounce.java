@@ -5,9 +5,16 @@ import java.awt.*;
  * the impact of the gravitational force, collision of the two balls and
  * collision to the walls.
  * 
+ * Known issue: Because of the fix that makes it impossible for the balls to 
+ * overlap each other or go (partly) outside of the box, the balls may get
+ * stuck towards a wall and gain a lot of kinetic energy that isn't in the
+ * system in the beginning. If the features are turned off, the total energy
+ * in the system will remain at the initial level, but the balls may get 
+ * stuck in each other or in the walls.
+ * 
  * @author Nina Malm (910509-3646, ninam@student.chalmers.se, IT)
- * @author Marika Hansson (910305-0804, hmarika@student.chalmers.se, IT) Time
- *         spent: NM: 9.25 h, MH: 9.25 h (18:30)
+ * @author Marika Hansson (910305-0804, hmarika@student.chalmers.se, IT) <br>
+ * Time spent: NM: 12.25 h, MH: 12.25 h
  * 
  */
 public class Bounce extends Animation {
@@ -18,7 +25,7 @@ public class Bounce extends Animation {
 	protected Ball[] balls = new Ball[2];
 
 	protected void initAnimator() {
-		deltaT = 0.005; // simulation time interval in seconds
+		deltaT = 0.004; // simulation time interval in seconds
 		setDelay((int) (1000 * deltaT)); // needed for Animation superclass
 		pixelsPerMeter = 40;
 		grav = 9.8;

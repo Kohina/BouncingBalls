@@ -1,6 +1,12 @@
 import java.awt.Color;
 
-
+/**
+ * Class that represents a ball.
+ * 
+ * @author Nina Malm (910509-3646, ninam@student.chalmers.se, IT)
+ * @author Marika Hansson (910305-0804, hmarika@student.chalmers.se, IT)
+ *
+ */
 public class Ball {
 	private int radius;	//in px
 	private int mass;	
