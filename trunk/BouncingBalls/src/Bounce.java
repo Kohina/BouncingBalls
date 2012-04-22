@@ -14,7 +14,7 @@ public class Bounce extends Animation {
 		grav = 9.8;
 
 		balls[0] = new Ball(3, 3, 20, 7, 1, 5, Color.red);
-		balls[1] = new Ball(1, 1, 20, 7, 1, 5, Color.blue);
+		balls[1] = new Ball(1, 1, 15, 7, -2, 5, Color.blue);
 	
 		pixelX1 = (int) (pixelsPerMeter * balls[0].getX()); // screen position
 		pixelY1 = (int) (pixelsPerMeter * balls[0].getY());
@@ -94,20 +94,15 @@ public class Bounce extends Animation {
 			balls[0].setVelocity(V1*Math.cos(a+b1), V1*Math.sin(a+b1));
 			balls[1].setVelocity(V2*Math.cos(a+b2), V2*Math.sin(a+b2));
 			
-			double over = Math.abs((balls[0].getX()-balls[1].getX())-(balls[0].getRadius()+balls[1].getRadius()));
-			System.out.println("over: " + over);
-			System.out.println("Y1: " + (balls[0].getX()-(over/2)));
-			System.out.println("X1: " + balls[0].getX());
-			System.out.println("Y2: " + balls[1].getY());
-			System.out.println("X2: " + balls[1].getX());
+			double over = Math.abs(((balls[0].getX()*pixelsPerMeter)-(balls[1].getX()*pixelsPerMeter))-(balls[0].getRadius()+balls[1].getRadius()));
 			if(over > 0){
 				if(balls[0].getX() < balls[1].getX()){
-					balls[0].setPosition(balls[0].getX()-(over/2), balls[0].getY());
-					balls[1].setPosition(balls[1].getX()+(over/2), balls[1].getY());
+					balls[0].setPosition(balls[0].getX()-((over/2)/pixelsPerMeter), balls[0].getY());
+					balls[1].setPosition(balls[1].getX()+((over/2)/pixelsPerMeter), balls[1].getY());
 				}
 				else{
-					balls[1].setPosition(balls[1].getX()-(over/2), balls[1].getY());
-					balls[0].setPosition(balls[0].getX()+(over/2), balls[0].getY());
+					balls[1].setPosition(balls[1].getX()-((over/2)/pixelsPerMeter), balls[1].getY());
+					balls[0].setPosition(balls[0].getX()+((over/2)/pixelsPerMeter), balls[0].getY());
 				}
 			}
 		}
