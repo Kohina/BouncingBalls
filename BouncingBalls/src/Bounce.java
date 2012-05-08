@@ -20,7 +20,8 @@ import java.awt.*;
 public class Bounce extends Animation {
 
 	protected double deltaT, pixelsPerMeter, grav;
-	protected int radius, firstTime = 1;
+	protected int radius;
+	protected boolean firstTime = true;
 	protected Color color = Color.red;
 	protected Ball[] balls = new Ball[2];
 
@@ -54,9 +55,9 @@ public class Bounce extends Animation {
 
 	private void clearFrame(Graphics g) {
 		g.setColor(Color.white);
-		if (firstTime == 1) {
+		if (firstTime) {
 			g.fillRect(0, 0, d.width, d.height);
-			firstTime = 0;
+			firstTime = false;
 		} // g.fillRect(0,0,d.width,d.height); // slower?
 		
 		int pixelX1 = (int) (pixelsPerMeter * balls[0].getX()); // screen position
@@ -106,12 +107,12 @@ public class Bounce extends Animation {
 		if (Math.sqrt(dX*dX + dY*dY) <= ball1.getRadius() + ball2.getRadius()) {
 			double a = Math.atan((double) dY / dX); // vinkeln som bollarna tr�ffas i
 
-			double V1 = Math.sqrt(Math.pow(ball1.getVx(), 2) + Math.pow(ball1.getVy(), 2));
-			double aV1 = Math.atan(ball1.getVy() / ball1.getVx());
-			double V2 = Math.sqrt(Math.pow(ball2.getVx(), 2) + Math.pow(ball2.getVy(), 2));
-			double aV2 = Math.atan(ball2.getVy() / ball2.getVx());
-			double a1 = aV1 - a;
-			double a2 = aV2 - a;
+			double V1 = Math.sqrt(Math.pow(ball1.getVx(), 2) + Math.pow(ball1.getVy(), 2)); //Total velocity for ball1
+			double aV1 = Math.atan(ball1.getVy() / ball1.getVx()); //Velocity angel ball1
+			double V2 = Math.sqrt(Math.pow(ball2.getVx(), 2) + Math.pow(ball2.getVy(), 2)); //Total velocity for ball2
+			double aV2 = Math.atan(ball2.getVy() / ball2.getVx()); //Velocity angel ball2
+			double a1 = aV1 - a; //Angel in the new coordinate-system for ball1
+			double a2 = aV2 - a; //Angel in the new coordinate-system for ball2
 
 			double Vf1 = V1 * Math.cos(a1);	//velocity along the line between the centers of the balls (f-axis)
 			double Vg1 = V1 * Math.sin(a1); //velocity along the line perpendicular to the line between the centers of the balls (g-axis)
@@ -127,10 +128,10 @@ public class Bounce extends Animation {
 
 			double b1 = Math.atan(Vg1 / Vf1); //angle between the f-axis and the new velocity
 			double b2 = Math.atan(Vg2 / Vf2);
-			V1 = Math.sqrt(Math.pow(Vf1, 2) + Math.pow(Vg1, 2));
-			V2 = Math.sqrt(Math.pow(Vf2, 2) + Math.pow(Vg2, 2));
+			V1 = Math.sqrt(Math.pow(Vf1, 2) + Math.pow(Vg1, 2)); //new total velocity for ball1
+			V2 = Math.sqrt(Math.pow(Vf2, 2) + Math.pow(Vg2, 2)); //new total velocity for ball2
 
-			ball1.setVelocity(V1 * Math.cos(a + b1), V1 * Math.sin(a + b1));
+			ball1.setVelocity(V1 * Math.cos(a + b1), V1 * Math.sin(a + b1)); //convert velocity back to x, y coordinates and set
 			ball2.setVelocity(V2 * Math.cos(a + b2), V2 * Math.sin(a + b2));
 			
 			fixOverlap(balls[0], balls[1]);
