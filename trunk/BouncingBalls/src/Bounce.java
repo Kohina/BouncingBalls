@@ -31,8 +31,8 @@ public class Bounce extends Animation {
 		pixelsPerMeter = 40;
 		grav = 9.8;
 
-		balls[0] = new Ball(1, 3, 20, 3, 0.05, 0.05, Color.red);
-		balls[1] = new Ball(1, 1, 10, 7, 5, 4, Color.blue);		
+		balls[0] = new Ball(1, 3, 20, 3, 0.05, 0.05, Color.magenta);
+		balls[1] = new Ball(1, 1, 10, 7, 5, 4, Color.orange);		
 	}
 
 	protected void paintAnimator(Graphics g) {
