@@ -26,13 +26,13 @@ public class Bounce extends Animation {
 	protected Ball[] balls = new Ball[2];
 
 	protected void initAnimator() {
-		deltaT = 0.004; // simulation time interval in seconds
+		deltaT = 0.005; // simulation time interval in seconds
 		setDelay((int) (1000 * deltaT)); // needed for Animation superclass
 		pixelsPerMeter = 40;
 		grav = 9.8;
 
-		balls[0] = new Ball(3, 3, 20, 3, 2, 9, Color.red);
-		balls[1] = new Ball(1, 1, 10, 7, -1, 5, Color.blue);		
+		balls[0] = new Ball(1, 3, 20, 7, 0.05, 0.05, Color.red);
+		balls[1] = new Ball(1, 1, 20, 7, 5, 4, Color.blue);		
 	}
 
 	protected void paintAnimator(Graphics g) {
@@ -70,6 +70,8 @@ public class Bounce extends Animation {
 		g.fillOval(pixelX2 - balls[1].getRadius(), d.height - pixelY2
 				- balls[1].getRadius(), balls[1].getRadius() * 2,
 				balls[1].getRadius() * 2);
+		g.drawLine(pixelX1, d.height -pixelY1, pixelX1+(int)(balls[0].getVx()*10), d.height -(int)(pixelY1+balls[0].getVy()*10));
+		g.drawLine(pixelX2, d.height -pixelY2, pixelX2+(int)(balls[1].getVx()*10), d.height -(int)(pixelY2+balls[1].getVy()*10));
 	}
 	
 	private void paintBall(Ball ball, Graphics g) {
@@ -81,30 +83,46 @@ public class Bounce extends Animation {
 				d.height - pixelY - ball.getRadius(), 
 				ball.getRadius() * 2,
 				ball.getRadius() * 2);
+		g.setColor(ball.getColor().darker());
+		g.drawLine(pixelX, d.height -pixelY, pixelX+(int)(ball.getVx()*10), d.height -(int)(pixelY+ball.getVy()*10));
 	}
 	
 	private void handleWallCollision(Ball ball) {
-		if (ball.getX()*pixelsPerMeter - ball.getRadius() <= 0) { // left wall
+		Ball next = ball.clone();
+		applyGravity(next);
+		applyPositionChange(next);
+		
+		if (next.getX()*pixelsPerMeter - next.getRadius() <= 0) { // left wall
 			ball.setVelocity(-ball.getVx(), ball.getVy());
 		}
-		if (ball.getX()*pixelsPerMeter + ball.getRadius() >= d.width) { // right wall
+		if (next.getX()*pixelsPerMeter + next.getRadius() >= d.width) { // right wall
 			ball.setVelocity(-ball.getVx(), ball.getVy());
 		}
-		if (ball.getY()*pixelsPerMeter - ball.getRadius() <= 0) { // bottom wall
+		if (next.getY()*pixelsPerMeter - next.getRadius() <= 0) { // bottom wall
 			ball.setVelocity(ball.getVx(), -ball.getVy());
 		}
-		if (ball.getY()*pixelsPerMeter + ball.getRadius() >= d.height) { // top wall
+		if (next.getY()*pixelsPerMeter + next.getRadius() >= d.height) { // top wall
 			ball.setVelocity(ball.getVx(), -ball.getVy());
 		}
 		
-		fixOverlap(ball);
+		//fixOverlap(ball);
 	}
 	
+	private boolean collisionHandled = false; 
+	
 	private void handleCollision(Ball ball1, Ball ball2) {
-		int dX = (int)((ball1.getX()-ball2.getX())*pixelsPerMeter); // Avst�nd mellan bollarna i x-led
-		int dY = (int)((ball1.getY()-ball2.getY())*pixelsPerMeter); // Avst�nd mellan bollarna i y-led
+		Ball next1 = ball1.clone();
+		applyGravity(next1);
+		applyPositionChange(next1);
+		Ball next2 = ball2.clone();
+		applyGravity(next2);
+		applyPositionChange(next2);
+		
+		int dX = (int)((next1.getX()-next2.getX())*pixelsPerMeter); // Avst�nd mellan bollarna i x-led
+		int dY = (int)((next1.getY()-next2.getY())*pixelsPerMeter); // Avst�nd mellan bollarna i y-led
 		
 		if (Math.sqrt(dX*dX + dY*dY) <= ball1.getRadius() + ball2.getRadius()) {
+			if (!collisionHandled) {
 			double a = Math.atan((double) dY / dX); // vinkeln som bollarna tr�ffas i
 
 			double V1 = Math.sqrt(Math.pow(ball1.getVx(), 2) + Math.pow(ball1.getVy(), 2)); //Total velocity for ball1
@@ -118,6 +136,10 @@ public class Bounce extends Animation {
 			double Vg1 = V1 * Math.sin(a1); //velocity along the line perpendicular to the line between the centers of the balls (g-axis)
 			double Vf2 = V2 * Math.cos(a2);
 			double Vg2 = V2 * Math.sin(a2);
+			
+			System.out.println("a: " + a);
+			System.out.println("U1: " + V1 + ", " + aV1 + " radians");
+			System.out.println("U2: " + V2 + ", " + aV2 + " radians");
 
 			int m1 = ball1.getMass();
 			int m2 = ball2.getMass();
@@ -125,6 +147,9 @@ public class Bounce extends Animation {
 			double Uf2 = Vf2;
 			Vf1 = (m1 * Uf1 + 2 * m2 * Uf2 - m2 * Uf1) / (m1 + m2);
 			Vf2 = -Uf2 + Uf1 + Vf1;
+			
+			System.out.println("Uf1: " + Uf1 + ", Vf1: " + Vf1);
+			System.out.println("Uf2: " + Uf2 + ", Vf2: " + Vf2);
 
 			double b1 = Math.atan(Vg1 / Vf1); //angle between the f-axis and the new velocity
 			double b2 = Math.atan(Vg2 / Vf2);
@@ -134,8 +159,23 @@ public class Bounce extends Animation {
 			ball1.setVelocity(V1 * Math.cos(a + b1), V1 * Math.sin(a + b1)); //convert velocity back to x, y coordinates and set
 			ball2.setVelocity(V2 * Math.cos(a + b2), V2 * Math.sin(a + b2));
 			
-			fixOverlap(balls[0], balls[1]);
+			System.out.println("V1: " + V1 + ", " + (b1+a) + " radians");
+			System.out.println("V2: " + V2 + ", " + (b2+a) + " radians");
+			System.out.println("-----------------------------------------------");
+			
+			//fixOverlap(balls[0], balls[1]);
+			collisionHandled = true;
+			}
+			
+		} else {
+			collisionHandled = false;
 		}
+		/*try {
+			Thread.currentThread().sleep(500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
 	}
 	
 	private void fixOverlap(Ball ball1, Ball ball2) {
@@ -230,7 +270,7 @@ public class Bounce extends Animation {
 	}
 	
 	private void applyGravity(Ball ball) {
-		ball.setVelocity(ball.getVx(), ball.getVy() - grav * deltaT);
+		//ball.setVelocity(ball.getVx(), ball.getVy() - grav * deltaT);
 	}
 	
 	private void applyPositionChange(Ball ball) {
