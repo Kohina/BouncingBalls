@@ -12,6 +12,7 @@ public abstract class Animation
 
     final public void init() {
 	d = getSize();
+	//d = new Dimension(600, 400);
 	im = createImage(d.width, d.height);
 	offscreen = im.getGraphics();
 	initAnimator();
