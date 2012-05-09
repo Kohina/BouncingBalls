@@ -61,4 +61,9 @@ public class Ball {
 	public Color getColor() {
 		return this.color;
 	}
+	
+	@Override
+	public Ball clone() {
+		return new Ball(x, y, radius, mass, vx, vy, color);
+	}
 }
