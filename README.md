@@ -1,0 +1,1 @@
+A programming task developed in a group of 2 students for a course at Chalmers. The application animates two balls that bounces in a frame and models how they behave when they colide with different areas and when they have different mass.
